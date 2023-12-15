@@ -23,8 +23,19 @@ def number1_fun(message):
 def number2_fun(message):
     global num2
     num2=message.text
-    operator = bot.send_message(message.chat.id, "Введите оператор(+,-,/,*):")
-    bot.register_next_step_handler(operator,operators)
+    keyword = types.InlineKeyboardMarkup(row_width=2)
+    bt1 = types.InlineKeyboardButton("+",callback_data="plus")
+    bt2 = types.InlineKeyboardButton("-", callback_data= "minus")
+    keyword.row(bt1,bt2, )
+    bt3 = types.InlineKeyboardButton("/",callback_data="delenie")
+    bt4 = types.InlineKeyboardButton("*" , callback_data="umn")
+    keyword.row(bt3,bt4)
+
+    operator = bot.send_message(message.chat.id, "Выберите оператор ",reply_markup=keyword)
+
+
+
+
 
 
 def operators(message):
@@ -48,6 +59,38 @@ def operators(message):
         bot.send_message(message.chat.id, "для повтора операции введите /start")
     else:
         bot.send_message(message.chat.id,"Ошшибка ввода .Введите /start и повторите попытку")
+
+
+
+@bot.callback_query_handler(func = lambda call:True)
+def callbacl_mes(call):
+    global num1;
+    global num2;
+    global result;
+
+    bot.answer_callback_query(callback_query_id=call.id, )
+    id = call.message.chat.id
+    if call.data == 'umn':
+        result = float(num1)*float(num2)
+        bot.send_message(call.message.chat.id,f"Результат: {result}" )
+        bot.send_message(call.message.chat.id, "для повтора операции введите /start")
+    elif call.data =="plus":
+        result = float(num1)+float(num2)
+        bot.send_message(call.message.chat.id,f"Результат:{result}")
+        bot.send_message(call.message.chat.id, "для повтора операции введите /start")
+    elif call.data =="minus":
+        result = float(num1)-float(num2)
+        bot.send_message(call.message.chat.id,f"Результат:{result}")
+        bot.send_message(call.message.chat.id, "для повтора операции введите /start")
+    elif call.data =="delenie":
+        result = float(num1)/float(num2)
+        bot.send_message(call.message.chat.id,f"Результат:{result}")
+        bot.send_message(call.message.chat.id, "для повтора операции введите /start")
+
+
+
+
+
 
 print("Ready")
 #bot.infinity_polling()
